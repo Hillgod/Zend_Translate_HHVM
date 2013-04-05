@@ -8,8 +8,7 @@ For example: 'use \fopen;'
 
 ### Welcome to the *Zend Framework 2.1* Release!
 
-Master: [![Build Status](https://secure.travis-ci.org/zendframework/zf2.png?branch=master)](http://travis-ci.org/zendframework/zf2)
-Develop: [![Build Status](https://secure.travis-ci.org/zendframework/zf2.png?branch=develop)](http://travis-ci.org/zendframework/zf2)
+Master: [![Build Status](https://secure.travis-ci.org/Hillgod/zf2.png?branch=master)](http://travis-ci.org/Hillgod/zf2)
 
 ## RELEASE INFORMATION
 
