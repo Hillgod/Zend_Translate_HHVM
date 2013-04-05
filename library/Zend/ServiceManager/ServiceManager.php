@@ -10,6 +10,10 @@
 namespace Zend\ServiceManager;
 
 use ReflectionClass;
+use \is_callable;
+use \array_unshift;
+use \strtr;
+use \strtolower;
 
 class ServiceManager implements ServiceLocatorInterface
 {

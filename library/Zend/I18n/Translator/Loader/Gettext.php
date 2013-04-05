@@ -13,6 +13,20 @@ use Zend\I18n\Exception;
 use Zend\I18n\Translator\Plural\Rule as PluralRule;
 use Zend\I18n\Translator\TextDomain;
 use Zend\Stdlib\ErrorHandler;
+use \is_file;
+use \is_readable;
+use \fopen;
+use \fread;
+use \fclose;
+use \sprintf;
+use \unpack;
+use \fseek;
+use \explode;
+use \count;
+use \var_dump;
+use \trim;
+use \strtolower;
+
 
 /**
  * Gettext loader.
@@ -44,7 +58,7 @@ class Gettext implements FileLoaderInterface
      */
     public function load($locale, $filename)
     {
-        if (!is_file($filename) || !is_readable($filename)) {
+    	if (!is_file($filename) || !is_readable($filename)) {
             throw new Exception\InvalidArgumentException(sprintf(
                 'Could not open file %s for reading',
                 $filename
@@ -117,27 +131,30 @@ class Gettext implements FileLoaderInterface
                 $originalString = explode("\0", fread($this->file, $originalStringSize));
             }
 
-            if ($translationStringSize > 0) {
+			if ($translationStringSize > 0) {
                 fseek($this->file, $translationStringOffset);
                 $translationString = explode("\0", fread($this->file, $translationStringSize));
 
                 if (count($originalString) > 1 && count($translationString) > 1) {
-                    $textDomain[$originalString[0]] = $translationString;
-
+                    // $textDomain[$originalString[0]] = $translationString;
+					$textDomain->setTranslation($originalString[0], $translationString);
+                    
                     array_shift($originalString);
 
                     foreach ($originalString as $string) {
-                        $textDomain[$string] = '';
+                        $textDomain->setTranslation($string, '');
                     }
                 } else {
-                    $textDomain[$originalString[0]] = $translationString[0];
+                	if (!empty($originalString[0])) {
+                		$textDomain->setTranslation($originalString[0], $translationString[0]);
+					}
                 }
             }
         }
 
         // Read header entries
-        if (array_key_exists('', $textDomain)) {
-            $rawHeaders = explode("\n", trim($textDomain['']));
+        if (isset($textDomain->getTranslation(''))) {
+            $rawHeaders = explode("\n", trim($textDomain->getTranslation('')));
 
             foreach ($rawHeaders as $rawHeader) {
                 list($header, $content) = explode(':', $rawHeader, 2);
@@ -147,7 +164,7 @@ class Gettext implements FileLoaderInterface
                 }
             }
 
-            unset($textDomain['']);
+            $textDomain->setTranslation('', null);
         }
 
         fclose($this->file);

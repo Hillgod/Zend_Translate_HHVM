@@ -9,13 +9,13 @@
 
 namespace Zend\I18n\Translator;
 
-use ArrayObject;
+// use ArrayObject;
 use Zend\I18n\Translator\Plural\Rule as PluralRule;
 
 /**
  * Text domain.
  */
-class TextDomain extends ArrayObject
+class TextDomain //extends ArrayObject
 {
     /**
      * Plural rule.
@@ -23,6 +23,8 @@ class TextDomain extends ArrayObject
      * @var PluralRule
      */
     protected $pluralRule;
+
+	private $data = array();
 
     /**
      * Set the plural rule
@@ -51,4 +53,13 @@ class TextDomain extends ArrayObject
 
         return $this->pluralRule;
     }
+	
+	public function setTranslation($key, $translation) {
+		$this->data[$key] = $translation;
+	}
+	
+	public function getTranslation($key) {
+		return isset($this->data[$key]) ? $this->data[$key] : null;
+	}
+	
 }

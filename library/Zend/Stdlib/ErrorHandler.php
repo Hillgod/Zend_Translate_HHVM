@@ -10,6 +10,10 @@
 namespace Zend\Stdlib;
 
 use ErrorException;
+use \get_called_class;
+use \set_error_handler;
+use \restore_error_handler;
+use \array_pop;
 
 /**
  * ErrorHandler that can be used to catch internal PHP errors
