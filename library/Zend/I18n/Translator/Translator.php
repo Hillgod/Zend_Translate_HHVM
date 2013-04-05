@@ -11,12 +11,17 @@ namespace Zend\I18n\Translator;
 
 use Locale;
 use Traversable;
+use \rtrim;
+use \sprintf;
+use \is_file;
+use \debug;
 use Zend\Cache;
 use Zend\Cache\Storage\StorageInterface as CacheStorage;
 use Zend\I18n\Exception;
 use Zend\I18n\Translator\Loader\FileLoaderInterface;
 use Zend\I18n\Translator\Loader\RemoteLoaderInterface;
 use Zend\Stdlib\ArrayUtils;
+use Zend\I18n\Translator\LoaderPluginManager;
 
 /**
  * Translator.
@@ -279,7 +284,7 @@ class Translator
      * @param  LoaderPluginManager $pluginManager
      * @return Translator
      */
-    public function setPluginManager(LoaderPluginManager $pluginManager)
+    public function setPluginManager($pluginManager)
     {
         $this->pluginManager = $pluginManager;
 
@@ -313,7 +318,7 @@ class Translator
     public function translate($message, $textDomain = 'default', $locale = null)
     {
         $locale      = ($locale ?: $this->getLocale());
-        $translation = $this->getTranslatedMessage($message, $locale, $textDomain);
+		$translation = $this->getTranslatedMessage($message, $locale, $textDomain);
 
         if ($translation !== null && $translation !== '') {
             return $translation;
@@ -399,8 +404,28 @@ class Translator
             $this->loadMessages($textDomain, $locale);
         }
 
-        if (isset($this->messages[$textDomain][$locale][$message])) {
-            return $this->messages[$textDomain][$locale][$message];
+		if (is_array($this->messages[$textDomain][$locale])) {
+        	foreach ($this->messages[$textDomain][$locale] as $textDomain) {
+                if (isset($textDomain->getTranslation($message))) {
+                    if ($returnPluralRule) {
+                        return array(
+                            'message'    => $textDomain->getTranslation($message),
+                            'plural_rule' => $textDomain->getPluralRule()
+                        );
+                    } else {
+                        return $textDomain->getTranslation($message);
+                    }
+                }
+            }
+        } elseif (isset($this->messages[$textDomain][$locale]) && isset($this->messages[$textDomain][$locale]->getTranslation($message))) {
+        	if ($returnPluralRule) {
+                return array(
+                    'message'     => $this->messages[$textDomain][$locale]->getTranslation($message),
+                    'plural_rule' => $this->messages[$textDomain][$locale]->getPluralRule()
+                );
+            } else {
+                return $this->messages[$textDomain][$locale]->getTranslation($message);
+            }
         }
 
         return null;
@@ -450,7 +475,7 @@ class Translator
         $pattern,
         $textDomain = 'default'
     ) {
-        if (!isset($this->patterns[$textDomain])) {
+    	if (!isset($this->patterns[$textDomain])) {
             $this->patterns[$textDomain] = array();
         }
 
