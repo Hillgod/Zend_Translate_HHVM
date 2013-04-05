@@ -1,3 +1,11 @@
+### PURPOSE OF THIS FORK ###
+
+Remove all the minimum files needed for zend translate.  Made numerous changes for this to work in HipHop VM, which mostly involves
+accounting for HHVM's lack of support for namespaces.
+    
+If you find that a function cannot be found in one of the Zend classes, try importing with 'use \function'.
+For example: 'use \fopen;'
+
 ### Welcome to the *Zend Framework 2.1* Release!
 
 Master: [![Build Status](https://secure.travis-ci.org/zendframework/zf2.png?branch=master)](http://travis-ci.org/zendframework/zf2)
