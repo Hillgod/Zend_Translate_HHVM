@@ -1,26 +1,15 @@
-### PURPOSE OF THIS FORK ###
+# PURPOSE OF THIS FORK
 
-Remove all the minimum files needed for zend translate.  Made numerous changes for this to work in HipHop VM, which mostly involves
-accounting for HHVM's lack of support for namespaces.
+Remove most of everything that's not needed for the Zend_Translate component.  Made numerous changes for this to work in HipHop VM, which mostly involves accounting for HHVM's lack of support for namespaces.
+
+*Caching has been removed*
     
 If you find that a function cannot be found in one of the Zend classes, try importing with 'use \function'.
 For example: 'use \fopen;'
 
-### Welcome to the *Zend Framework 2.1* Release!
+### Zend_Translate for HipHop-VM
 
 Master - Tests are broke. Got rid of lots of things. TODO: Clean that up. : [![Build Status](https://secure.travis-ci.org/Hillgod/zf2.png?branch=master)](http://travis-ci.org/Hillgod/zf2)
-
-## RELEASE INFORMATION
-
-*Zend Framework 2.1.5dev*
-
-This is the fifth maintenance release for the version 2.1 series.
-
-DD MMM YYYY
-
-### UPDATES IN 2.1.5
-
-Please see [CHANGELOG.md](CHANGELOG.md).
 
 ### SYSTEM REQUIREMENTS
 
