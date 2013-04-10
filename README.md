@@ -9,7 +9,7 @@ For example: 'use \fopen;'
 
 ### Zend_Translate for HipHop-VM
 
-Master - Tests are broke. Got rid of lots of things. TODO: Clean that up. : [![Build Status](https://secure.travis-ci.org/Hillgod/zf2.png?branch=master)](http://travis-ci.org/Hillgod/zf2)
+Master: [![Build Status](https://secure.travis-ci.org/Hillgod/zf2.png?branch=master)](http://travis-ci.org/Hillgod/zf2)
 
 ### SYSTEM REQUIREMENTS
 
