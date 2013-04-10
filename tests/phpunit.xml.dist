@@ -18,10 +18,6 @@
         </exclude>
     </groups>
 
-    <listeners>
-        <listener class="ZendTest\Db\IntegrationTestListener" file="./ZendTest/Db/IntegrationTestListener.php" />
-    </listeners>
-
     <php>
 
         <!-- Integration Test Variables -->

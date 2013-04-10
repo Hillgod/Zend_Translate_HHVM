@@ -131,8 +131,8 @@ class Translator
                         );
                     }
                 }
-
-                $translator->addTranslationFilePattern(
+				
+				$translator->addTranslationFilePattern(
                     $pattern['type'],
                     $pattern['base_dir'],
                     $pattern['pattern'],
@@ -193,16 +193,9 @@ class Translator
             }
         }
 
-        // cache
-        if (isset($options['cache'])) {
-            if ($options['cache'] instanceof CacheStorage) {
-                $translator->setCache($options['cache']);
-            } else {
-                $translator->setCache(Cache\StorageFactory::factory($options['cache']));
-            }
-        }
-
-        return $translator;
+		// That's right - no caching.
+        
+        return $translator;		
     }
 
     /**
@@ -394,7 +387,8 @@ class Translator
     protected function getTranslatedMessage(
         $message,
         $locale = null,
-        $textDomain = 'default'
+        $textDomain = 'default',
+        $returnPluralRule = false
     ) {
         if ($message === '') {
             return '';
@@ -402,11 +396,13 @@ class Translator
 
         if (!isset($this->messages[$textDomain][$locale])) {
             $this->loadMessages($textDomain, $locale);
+			
         }
 
 		if (is_array($this->messages[$textDomain][$locale])) {
         	foreach ($this->messages[$textDomain][$locale] as $textDomain) {
-                if (isset($textDomain->getTranslation($message))) {
+        		$translation = $textDomain->getTranslation($message);
+                if (isset($translation)) {
                     if ($returnPluralRule) {
                         return array(
                             'message'    => $textDomain->getTranslation($message),
@@ -417,7 +413,7 @@ class Translator
                     }
                 }
             }
-        } elseif (isset($this->messages[$textDomain][$locale]) && isset($this->messages[$textDomain][$locale]->getTranslation($message))) {
+        } elseif (isset($this->messages[$textDomain][$locale]) && $this->messages[$textDomain][$locale]->getTranslation($message) !== null) {
         	if ($returnPluralRule) {
                 return array(
                     'message'     => $this->messages[$textDomain][$locale]->getTranslation($message),
@@ -535,11 +531,9 @@ class Translator
         $messagesLoaded |= $this->loadMessagesFromPatterns($textDomain, $locale);
         $messagesLoaded |= $this->loadMessagesFromFiles($textDomain, $locale);
 
-        if (!$messagesLoaded) {
+		if (!$messagesLoaded) {
             $this->messages[$textDomain][$locale] = null;
-        } elseif ($cache !== null) {
-            $cache->setItem($cacheId, $this->messages[$textDomain][$locale]);
-        }
+        } 
     }
 
     /**
@@ -588,7 +582,8 @@ class Translator
         $messagesLoaded = false;
 
         if (isset($this->patterns[$textDomain])) {
-            foreach ($this->patterns[$textDomain] as $pattern) {
+        	foreach ($this->patterns[$textDomain] as $pattern) {
+            	
                 $filename = $pattern['baseDir'] . '/' . sprintf($pattern['pattern'], $locale);
 
                 if (is_file($filename)) {
@@ -599,7 +594,8 @@ class Translator
                     }
 
                     if (isset($this->messages[$textDomain][$locale])) {
-                        $this->messages[$textDomain][$locale]->merge($loader->load($locale, $filename));
+                    	$msgs = $loader->load($locale, $filename);
+						$this->messages[$textDomain][$locale]->merge($msgs);
                     } else {
                         $this->messages[$textDomain][$locale] = $loader->load($locale, $filename);
                     }
@@ -632,14 +628,15 @@ class Translator
             foreach ($this->files[$textDomain][$currentLocale] as $file) {
                 $loader = $this->getPluginManager()->get($file['type']);
 
-                if (!$loader instanceof FileLoaderInterface) {
+				if (!$loader instanceof FileLoaderInterface) {
                     throw new Exception\RuntimeException('Specified loader is not a file loader');
                 }
 
                 if (isset($this->messages[$textDomain][$locale])) {
-                    $this->messages[$textDomain][$locale]->merge($loader->load($locale, $file['filename']));
+                	$var = $loader->load($locale, $file['filename']);
+					$this->messages[$textDomain][$locale]->merge($var);
                 } else {
-                    $this->messages[$textDomain][$locale] = $loader->load($locale, $file['filename']);
+                	$this->messages[$textDomain][$locale] = $loader->load($locale, $file['filename']);
                 }
 
                 $messagesLoaded = true;
@@ -648,6 +645,6 @@ class Translator
             unset($this->files[$textDomain][$currentLocale]);
         }
 
-        return $messagesLoaded;
+		return $messagesLoaded;
     }
 }

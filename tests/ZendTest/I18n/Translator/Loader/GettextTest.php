@@ -66,8 +66,8 @@ class GettextTest extends TestCase
         $loader = new GettextLoader();
         $textDomain = $loader->load('en_EN', $this->testFilesDir . '/translation_en.mo');
 
-        $this->assertEquals('Message 1 (en)', $textDomain['Message 1']);
-        $this->assertEquals('Message 4 (en)', $textDomain['Message 4']);
+        $this->assertEquals('Message 1 (en)', $textDomain->getTranslation('Message 1'));
+        $this->assertEquals('Message 4 (en)', $textDomain->getTranslation('Message 4'));
     }
 
     public function testLoaderLoadsPluralRules()

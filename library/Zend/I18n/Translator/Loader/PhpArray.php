@@ -47,16 +47,17 @@ class PhpArray implements FileLoaderInterface
 
         $textDomain = new TextDomain($messages);
 
-        if (array_key_exists('', $textDomain)) {
-            if (isset($textDomain['']['plural_forms'])) {
+        if ($textDomain->getTranslation('') !== null) {
+        	$empty = $textDomain->getTranslation('');
+            if (isset($empty['plural_forms'])) {
                 $textDomain->setPluralRule(
-                    PluralRule::fromString($textDomain['']['plural_forms'])
+                    PluralRule::fromString($empty['plural_forms'])
                 );
             }
 
-            unset($textDomain['']);
+            $textDomain->deleteTranslation('');
         }
-
-        return $textDomain;
+		
+		return $textDomain;
     }
 }

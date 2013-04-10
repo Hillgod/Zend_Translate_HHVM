@@ -23,7 +23,6 @@ use \unpack;
 use \fseek;
 use \explode;
 use \count;
-use \var_dump;
 use \trim;
 use \strtolower;
 
@@ -147,14 +146,17 @@ class Gettext implements FileLoaderInterface
                 } else {
                 	if (!empty($originalString[0])) {
                 		$textDomain->setTranslation($originalString[0], $translationString[0]);
+					} else {
+						$textDomain->setTranslation('', $translationString[0]);
 					}
                 }
             }
         }
 
         // Read header entries
-        if (isset($textDomain->getTranslation(''))) {
-            $rawHeaders = explode("\n", trim($textDomain->getTranslation('')));
+        $temp = $textDomain->getTranslation('');
+		if (isset($temp)) {
+			$rawHeaders = explode("\n", trim($textDomain->getTranslation('')));
 
             foreach ($rawHeaders as $rawHeader) {
                 list($header, $content) = explode(':', $rawHeader, 2);

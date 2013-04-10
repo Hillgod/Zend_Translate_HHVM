@@ -25,6 +25,21 @@ class TextDomain //extends ArrayObject
     protected $pluralRule;
 
 	private $data = array();
+	
+	public function __construct() {
+		if (func_num_args() > 1) {
+			throw new InvalidArgumentException('TextDomain constructor takes one or zero arguments');
+		}
+		if (func_num_args() == 1) {
+			$arr = func_get_arg(0);
+			if (!is_array($arr)) {
+				throw new InvalidArgumentException('Passed value is not an array.');
+			}
+			$this->data = $arr;
+		} else {
+			$this->data = array();
+		}
+	}
 
     /**
      * Set the plural rule
@@ -59,6 +74,14 @@ class TextDomain //extends ArrayObject
 	
 	public function getTranslation($key) {
 		return isset($this->data[$key]) ? $this->data[$key] : null;
+	}
+	
+	public function deleteTranslation($key) {
+		unset($this->data[$key]);
+	}
+	
+	public function merge(TextDomain $arr) {
+		$this->data = array_merge($this->data, $arr->data);
 	}
 	
 }
