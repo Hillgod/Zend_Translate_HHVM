@@ -11,6 +11,10 @@ namespace Zend\I18n\Translator;
 
 // use ArrayObject;
 use Zend\I18n\Translator\Plural\Rule as PluralRule;
+use \func_num_args;
+use \is_array;
+use \InvalidArgumentException;
+use \array_merge;
 
 /**
  * Text domain.
