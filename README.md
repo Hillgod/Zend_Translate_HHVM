@@ -1,3 +1,5 @@
+This isn't needed anymore, now that HHVM supports namespaces.
+
 # PURPOSE OF THIS FORK
 
 Remove most of everything that's not needed for the Zend_Translate component.  Made numerous changes for this to work in HipHop VM, which mostly involves accounting for HHVM's lack of support for namespaces.
